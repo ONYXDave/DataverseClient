@@ -13,28 +13,18 @@ using Microsoft.PowerPlatform.Dataverse.Client;
 using Microsoft.Xrm.Sdk;
 using System.Threading.Tasks;
 using Microsoft.Xrm.Sdk.Query;
-
-#if NET462_OR_GREATER
-using WSFederationHttpBinding = System.ServiceModel.Federation.WSFederationHttpBinding;
-
-using SecurityBindingElement = System.ServiceModel.Channels.SecurityBindingElement;
 using SecurityKeyEntropyMode = System.ServiceModel.Security.SecurityKeyEntropyMode;
+using SecurityBindingElement = System.ServiceModel.Channels.SecurityBindingElement;
 
-#else
-using SecurityBindingElement = SSS.System.ServiceModel.Channels.SecurityBindingElement;
-using SecurityKeyEntropyMode = SSS.System.ServiceModel.Security.SecurityKeyEntropyMode;
-#endif
 
 namespace Data8.PowerPlatform.Dataverse.Client
 {
     /// <summary>
     /// Inner client to set up the SOAP channel using WS-Trust
     /// </summary>
-#if NETCOREAPP
+
     class ClaimsBasedAuthClient : ClientBase<IOrganizationServiceAsync>, IOrganizationServiceAsync, IInnerOrganizationService
-#else
-    class ClaimsBasedAuthClient : ClientBase<IOrganizationService>, IOrganizationService, IInnerOrganizationService
-#endif
+
     {
         private readonly ProxySerializationSurrogate _serializationSurrogate;
 
@@ -51,7 +41,7 @@ namespace Data8.PowerPlatform.Dataverse.Client
             {
                 // Use server entropy to match SDK
                 var o = base.CreateMessageSecurity();
-                o.KeyEntropyMode = SecurityKeyEntropyMode.ServerEntropy;
+                o.KeyEntropyMode = System.ServiceModel.Security.SecurityKeyEntropyMode.ServerEntropy;
                 return o;
             }
         }
